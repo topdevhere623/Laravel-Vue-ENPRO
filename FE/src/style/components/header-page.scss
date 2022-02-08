@@ -1,0 +1,49 @@
+.header-page {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #CDCDCD;
+
+    .header-page-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 15px;
+    }
+
+    .breadcrumb {
+        margin-top: 0;
+    }
+
+    h3 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 31px;
+        color: white;
+    }
+
+    .button {
+        min-width: 250px;
+    }
+
+    .right {
+        display: flex;
+        // flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .checkbox {
+        & + .checkbox {
+            margin-left: 30px;
+        }
+
+        label {
+            margin-bottom: 0;
+        }
+    }
+
+    .checkbox + .link-icon {
+        margin-left: 25px;
+    }
+}

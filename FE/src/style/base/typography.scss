@@ -1,0 +1,28 @@
+body,
+button,
+input {
+    font-family: $font;
+}
+
+a {
+    color: inherit;
+
+    &:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6,
+.panel-title {
+    text-shadow: 0 0 0;
+    color: inherit;
+    font-family: $font;
+}
+
+.panel {
+}
+
+.no-wrap {
+    white-space: nowrap;
+}

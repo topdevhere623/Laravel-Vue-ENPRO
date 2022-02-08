@@ -1,0 +1,81 @@
+.sidebar-panel {
+    background: $color-blue-3;
+    //box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    width: 510px;
+    min-width: 510px;
+    height: calc(100vh - #{$header-height});
+    overflow: auto;
+    padding: 15px 30px;
+
+    .dRB {
+        h3 {
+            padding-right: 0 !important;
+            font-family: $font !important;
+        }
+    }
+
+    &::-webkit-scrollbar {
+        width: 13px;
+        height: 13px;
+        background-color: #2F3136;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #202225;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iNzY3IiB2aWV3Qm94PSIwIDAgMTQgNzY3IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KICAgIDxsaW5lIHgxPSIyLjg2NDI2IiB5MT0iMC41IiB4Mj0iMTAuMTM3IiB5Mj0iMC41IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4NCiAgICA8bGluZSB4MT0iMi44NjQyNiIgeTE9IjUuNSIgeDI9IjEwLjEzNyIgeTI9IjUuNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQogICAgPGxpbmUgeDE9IjE0IiB5MT0iNzY2LjUiIHkyPSI3NjYuNSIgc3Ryb2tlPSIjMTYxNzE5Ii8+DQo8L3N2Zz4NCg==");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 10px 10px;
+
+        &:hover {
+            background-color: #25272a;
+        }
+    }
+
+    .radio,
+    .checkbox {
+        .box {
+            background-color: $color-blue-1;
+        }
+    }
+
+    #checkboxes1,
+    #checkboxes2,
+    #checkboxes3 {
+        .checkbox {
+            .box {
+                background-color: $color-blue-3;
+            }
+        }
+    }
+
+    h3 {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 23px;
+        margin-bottom: 20px;
+    }
+
+    .md-close {
+        cursor: pointer;
+    }
+
+    .coords {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        line-height: 18px;
+        color: white;
+        margin-top: 25px;
+
+        span {
+            opacity: .7;
+        }
+    }
+
+    hr {
+        border-top: 1px solid $color-blue-1;
+        margin: 30px -30px;
+    }
+}

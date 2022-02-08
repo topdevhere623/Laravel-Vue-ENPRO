@@ -1,0 +1,17 @@
+#map {
+    .ymaps-2-1-77-float-button.ymaps-2-1-77-_hidden-icon {
+        background-color: $color-blue-1;
+        color: white;
+    }
+
+    .icon {
+        width: auto;
+        height: auto;
+        min-width: auto;
+    }
+
+    & > ymaps,
+    & > ymaps > ymaps {
+        width: 100% !important;
+    }
+}

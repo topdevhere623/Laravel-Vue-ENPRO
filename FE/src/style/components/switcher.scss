@@ -1,0 +1,50 @@
+.switcher {
+    display: inline-flex;
+    margin-top: 10px;
+
+    .modal-content & {
+        border-radius: 6px;
+        border: 1px solid $color-blue-1;
+    }
+
+    .item {
+        background-color: $color-blue-1;
+        padding: 10px;
+        cursor: pointer;
+        border-left: 1px solid $color-blue-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:first-child {
+            border-left: 0;
+            border-radius: 6px 0 0 6px;
+        }
+
+        &:last-child {
+            border-radius: 0 6px 6px 0;
+        }
+
+        &.active {
+            background-color: $color-blue-2;
+        }
+    }
+
+    .icon {
+        background-color: transparent !important;
+    }
+
+    & + .switcher {
+        margin-left: 6px;
+    }
+
+    .sidebar-panel & {
+        & + .switcher {
+            margin-left: 0;
+        }
+
+        .item {
+            padding: 8px;
+        }
+    }
+}

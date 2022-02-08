@@ -1,0 +1,109 @@
+.checkbox,
+.radio {
+    position: relative;
+    padding-left: 35px;
+    min-height: 26px;
+    color: white;
+    font-size: 16px;
+    line-height: 19px;
+    padding-top: 3px;
+
+    .box {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        background-color: $color-blue-3;
+        position: absolute;
+        top: 1px;
+        left: 0;
+        opacity: 1;
+        border-radius: 5px;
+
+        &:after {
+            position: absolute;
+            content: '';
+            height: 12px;
+            width: 7px;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(45deg);
+            top: 4px;
+            left: 9px;
+            opacity: 0;
+        }
+    }
+
+    input {
+        position: absolute;
+        top: 1px;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        opacity: 0;
+
+        &:checked {
+            & + .box {
+                opacity: 1;
+
+                &:after {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.radio {
+   .box {
+       border-radius: 50%;
+
+       &:after {
+           border: 0;
+           width: 10px;
+           height: 10px;
+           background-color: white;
+           border-radius: 50%;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+       }
+   }
+}
+
+.multiselect {
+    .overSelect {
+        cursor: pointer;
+    }
+
+    .selectric-wrapper .label {
+        padding-top: 21px;
+    }
+
+    #checkboxes1, #checkboxes2, #checkboxes3  {
+        background-color: $color-blue-1;
+        border: 0;
+        padding: 10px 20px;
+        border-radius: 0 0 6px 6px;
+        margin-top: -4px;
+
+        label:hover {
+            cursor: pointer;
+            background-color: transparent;
+            opacity: .8;
+        }
+    }
+}
+
+.check-inline {
+    .checkbox,
+    .radio {
+        display: inline-block;
+        margin-bottom: 15px;
+
+        & + .checkbox,
+        & + .radio {
+            margin-left: 30px;
+        }
+    }
+}
+

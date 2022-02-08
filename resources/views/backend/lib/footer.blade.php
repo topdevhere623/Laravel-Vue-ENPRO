@@ -1,0 +1,1 @@
+{{-- нижний футер - админка --}}<footer class="site-footer">    <div class="site-footer-right">        Электрические сети <a href="#">© <?php echo date('Y'); ?></a>    </div></footer>

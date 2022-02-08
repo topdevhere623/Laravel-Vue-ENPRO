@@ -1,0 +1,11 @@
+[class*="ymaps-2"][class*="-ground-pane"] {
+    filter: url(#{$path}filters/yellowfilter.svg#filters);
+    filter: url(#filters);
+}
+.withoutFilters [class*="ymaps-2"][class*="-ground-pane"] {
+    filter: none !important;
+}
+
+#map:empty {
+    display: none;
+}

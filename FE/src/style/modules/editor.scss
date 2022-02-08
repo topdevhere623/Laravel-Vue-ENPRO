@@ -1,0 +1,248 @@
+.editor {
+    margin-top: 15px;
+    padding: 0 15px 0 42px;
+
+
+    .ad-Grid {
+        fill: none;
+        stroke: lighten($color-blue-3, 10%);
+        stroke-width: .5px;
+        pointer-events: none;
+    }
+
+    #substactionData {
+        width: 100%;
+    }
+
+    .editor-area {
+        display: block;
+        background-color: $color-blue-3;
+    }
+
+    .add-button,
+    .other-button {
+        border: 1px solid $color-main;
+        padding: 3px;
+        color: $color-main;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin-top: 2px;
+        position: relative;
+
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 50%;
+            background-color: $color-main;
+            color: $color-blue-3;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 13px;
+            height: 13px;
+            transform: translate(50%, -50%);
+        }
+    }
+
+    .other-button {
+        background-color: rgba(255,255,255,.1);
+        border-color: transparent;
+        color: white;
+        margin-top: 1px;
+    }
+
+    .tools {
+        position: fixed;
+        top: 71px;
+        left: 0;
+    }
+
+    .base-elements {
+        .editor-toolbar {
+            flex-direction: column;
+        }
+    }
+
+    .editor-toolbar {
+        display: flex;
+        margin-left: -1px;
+        margin-right: -1px;
+
+        .item {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(white, .1);
+            cursor: pointer;
+            margin: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+
+            .icon {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: transparent !important;
+            }
+        }
+    }
+
+    .settings-sidebar {
+        position: fixed;
+        right: 0;
+        top: 57px;
+        bottom: 0;
+        z-index: 20;
+        transform: translate(100%, 0);
+        transition: all .2s;
+
+        &.active {
+            transform: translate(0, 0);
+            box-shadow: 0 0 0 1px rgba(255,255,255,.1);
+        }
+    }
+
+    .move .point-handle {
+        display: none;
+    }
+}
+
+.editor-page {
+    .main-content {
+        padding: 0;
+    }
+
+    .page-header {
+        display: none;
+    }
+
+    .sidebar-panel {
+        width: 230px;
+        padding: 15px 10px;
+        min-width: 230px;
+        overflow-x: hidden;
+
+        .page-header-actions {
+            position: relative;
+            top: auto;
+            transform: none;
+            right: 0;
+
+            .button {
+                display: inline-block;
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .col .button {
+            margin-top: 10px;
+        }
+
+        .button {
+            .icon {
+                filter: none;
+                margin-right: 0;
+                top: 0;
+                background-color: transparent;
+            }
+        }
+    }
+
+    .sidebar-panel,
+    .modal-content {
+        .text-field {
+            height: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
+
+            &.text-area {
+                height: auto;
+            }
+        }
+
+        .form-field .form-input-label {
+            top: 5px;
+            left: 10px;
+        }
+    }
+
+    .dRBImport {
+        .col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .button {
+            margin-top: 15px;
+        }
+    }
+
+    .form-field+.form-field {
+        margin-top: 10px;
+    }
+
+    .element-rotate {
+        width: 100%;
+    }
+
+    .element-switch {
+        margin-left: 0;
+
+        & + .element-switch {
+            margin-left: 5%;
+        }
+    }
+
+    .depended-element {
+        align-items: flex-end;
+        flex-wrap: wrap;
+
+        .caption {
+            width: 100%;
+        }
+
+        .form-field[name='mark'],
+        .form-field[name='markcable'] {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .form-field[name='length'],
+        .form-field[name='size'] {
+            width: calc(50% - 5px);
+            margin-top: 10px;
+        }
+
+        .button.small {
+            margin-top: 4px;
+            padding-top: 6px;
+            height: 34px;
+            display: inline-block;
+        }
+
+        .switcher {
+            margin-top: 0;
+            margin-left: 8px;
+        }
+    }
+}
+
+.ui-tooltip {
+    pointer-events: none;
+}

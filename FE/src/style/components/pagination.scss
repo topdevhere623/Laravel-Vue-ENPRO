@@ -1,0 +1,34 @@
+.pagination {
+    margin-bottom: 0;
+
+    .page-link {
+        border: 0;
+        background-color: $color-blue-1;
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
+        border-radius: 5px !important;
+        margin-left: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        height: 26px;
+        width: 26px;
+
+        &[aria-label="Next"],
+        &[aria-label="Previous"] {
+            background-color: transparent;
+            color: white;
+            width: 15px;
+        }
+    }
+
+    .active {
+        .page-link {
+            background-color: $color-main;
+            color: #121E34;
+        }
+    }
+}

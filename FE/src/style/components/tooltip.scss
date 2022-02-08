@@ -1,0 +1,23 @@
+.ui-tooltip {
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 300px;
+    background: white;
+    border-radius: 4px;
+    transform: translateY(8px);
+
+    &:before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        margin-bottom: -1px;
+        left: 10px;
+        border-bottom: 5px solid white;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+    }
+}
+body .ui-tooltip {
+    border-width: 2px;
+}

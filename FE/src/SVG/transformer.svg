@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="84" x="0" y="0" viewBox="0 0 50 84">
+    <g xmlns="http://www.w3.org/2000/svg" transform="translate(25 2)">
+        <circle cy="22.5" r="22.5"
+                fill="none"
+                stroke-width="4"
+                stroke="#FFFFFF"/>
+        <circle cy="56.5" r="22.5"
+                fill="none"
+                stroke-width="4"
+                stroke="#FFFFFF"/>
+    </g>
+</svg>

@@ -1,0 +1,112 @@
+.button {
+    border-radius: 6px;
+    background-color: $color-main;
+    border: 2px solid $color-main;
+    box-shadow: 0 0 0;
+    outline: none;
+    color: $color-blue-2;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    padding: 13px 25px 14px;
+    cursor: pointer;
+    transition: all .3s;
+    box-sizing: border-box;
+    text-align: center;
+    height: 50px;
+
+    .icon {
+        margin-right: 4px;
+        position: relative;
+        top: -2px;
+        vertical-align: middle;
+        filter: invert(.85);
+    }
+
+    &:hover {
+        background-color: rgba($color-main, .85);
+        color: $color-blue-2;
+    }
+
+    &.bordered {
+        border: 2px solid $color-main;
+        color: $color-main;
+        background-color: transparent;
+        outline: none;
+
+        &:hover {
+            opacity: .6;
+            color: $color-main;
+        }
+    }
+
+    &.small {
+        font-size: 13px;
+        height: 30px;
+        padding: 4px 25px 6px;
+    }
+}
+
+.button-small {
+    background-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    color: white;
+    border: 0;
+    box-shadow: 0 0 0;
+    outline: 0;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    transition: opacity .3s;
+    text-align: center;
+
+    .icon {
+        margin-left: 10px;
+        width: 13px;
+        height: 13px;
+        transition: all .3s;
+    }
+
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.link-icon {
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 0;
+    border-radius: 0;
+    outline: none;
+    color: white;
+    border: 0;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    font-family: $font;
+    display: inline-flex;
+
+    .icon {
+        margin-right: 9px;
+    }
+
+    &:hover {
+        opacity: .9;
+    }
+
+    & + .link-icon {
+        margin-left: 30px;
+    }
+}
+
+.input-group-addon {
+    background-color: $color-blue-2;
+    cursor: pointer;
+    margin-left: -5px;
+    border: 0;
+    border-radius: 0 5px 5px 0 !important;
+    color: white;
+
+    font-size: 19px;
+}

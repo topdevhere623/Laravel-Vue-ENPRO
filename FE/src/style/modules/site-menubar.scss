@@ -1,0 +1,150 @@
+.site-menubar-fold .page,
+.site-menubar-fold .site-footer,
+.site-menubar-unfold .page,
+.site-menubar-unfold .site-footer,
+.site-menubar-unfold.page-aside-fixed.page-aside-left .site-footer,
+.site-menubar-fold.page-aside-fixed.page-aside-left .site-footer {
+    margin-left: 290px;
+}
+
+.site-menubar {
+    top: $header-height;
+    height: calc(100% - #{$header-height});
+    background: $color-blue-3;
+    //box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    font-family: $font;
+    width: 290px !important;
+
+    .group {
+        margin-top: -2px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    .group-caption {
+        border-bottom: 2px solid $color-blue-1;
+        padding: 11px 45px 11px $container-gap;
+        border-top: 2px solid $color-blue-1;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        color: #C9C9C9;
+        position: relative;
+        cursor: pointer;
+        transition: color .3s;
+
+        &:hover {
+            color: white;
+
+            .collapse-button {
+                opacity: 1;
+            }
+            width: 290px;}
+
+    }
+
+    .admin-link {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: $color-main;
+        color: $color-blue-2;
+        padding: 15px $container-gap;
+        height: 48px;
+        display: flex;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 18px;
+        align-items: center;
+        justify-content: center;
+        transition: background-color .3s;
+        z-index: 2;
+        box-shadow: 0 0 5px $color-main;
+
+        &:hover {
+            background: rgba($color-main, .80%);
+        }
+
+        .icon {
+            margin-right: 20px;
+        }
+    }
+
+    .site-menubar-body {
+        height: calc(100% - 48px);
+    }
+
+    .collapse-button {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        opacity: .7;
+        transition: transform .3s, opacity .3s;
+    }
+
+    .group-items {
+        display: none;
+    }
+
+    .group-item {
+        padding: 5px $container-gap;
+        display: flex;
+        height: 48px;
+        align-items: center;
+        color: white;
+        font-size: 14px;
+        line-height: 18px;
+        transition: color .3s;
+
+        .icon {
+            margin-right: 15px;
+            opacity: 1;
+            transition: opacity .3s;
+            filter: brightness(1.5);
+        }
+
+        &:hover {
+            color: rgba(white, .8);
+
+            .icon {
+                opacity: .8;
+            }
+        }
+    }
+
+    .group {
+        &:first-child {
+            .group-caption {
+                border-top: 0;
+            }
+        }
+
+        &.opened {
+            .collapse-button {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+
+    .disabled {
+        padding: 5px 30px;
+        display: flex;
+        height: 48px;
+        align-items: center;
+        color: #999;
+        font-size: 15px;
+        line-height: 18px;
+        transition: color .3s;
+
+        .icon {
+            margin-right: 15px;
+            opacity: 0.8;
+            transition: opacity .3s;
+            filter: brightness(1.5)
+        }
+    }
+}

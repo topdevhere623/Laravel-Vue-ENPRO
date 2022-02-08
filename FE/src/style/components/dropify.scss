@@ -1,0 +1,10 @@
+.dropify-wrapper {
+    border: 0;
+    background: none !important;
+
+    .dropify-preview {
+        background: $color-blue-1;
+        border-radius: 6px;
+        border: 0;
+    }
+}

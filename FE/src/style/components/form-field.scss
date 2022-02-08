@@ -1,0 +1,94 @@
+.form-field {
+    position: relative;
+
+    .group {
+        padding: 10px 0;
+        margin: 10px 0 0;
+        border-top: 1px solid rgba(white, .1);
+        border-bottom: 1px solid rgba(white, .1);
+
+        & + .group {
+            margin-top: 0;
+            border-top: 0;
+        }
+    }
+
+    .button {
+        width: 100%;
+
+        &.small {
+            width: auto;
+        }
+    }
+
+    .col {
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .row {
+        margin-right: -9px;
+        margin-left: -9px;
+    }
+
+    .form-input-label {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 16px;
+        z-index: 10;
+        color: #F1F1F1;
+        pointer-events: none;
+        transition: all .3s;
+    }
+
+    .form-label {
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 16px;
+        z-index: 10;
+        color: #F1F1F1;
+        pointer-events: none;
+        transition: all .3s;
+    }
+
+    .selectric-open {
+        & +  .form-input-label {
+            z-index: 99999;
+        }
+    }
+
+    & + .form-field {
+        margin-top: 18px;
+    }
+
+    &.button-field {
+        margin-top: 30px;
+    }
+}
+
+.text-options {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 0 !important;
+}
+
+.element-switch {
+    display: inline-block;
+    margin-left: 5%;
+}
+
+.element-rotate {
+    display: inline-block;
+}
+
+.form-group {
+    margin-bottom: 30px;
+
+    & + hr {
+        margin-top: 0;
+    }
+}

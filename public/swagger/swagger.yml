@@ -1,0 +1,2638 @@
+swagger: '2.0'
+info:
+  version: 1.0.5
+  title: ENPRO backend API
+  description: ''
+host: 'localhost'
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  JWT:
+    name: Authorization
+    type: apiKey
+    in: header
+paths:
+  '/assets/model/{modelName}/id/{id}':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название класса модели, для которой сохраняется Asset (например Acline)
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id модели для которой сохраняется Asset
+    get:
+      operationId: get-model-asset
+      summary: Получение Asset-а какой-нибудь модели
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  asset:
+                    $ref: '#/definitions/Asset'
+                  asset_group_ids:
+                    type: array
+                    items:
+                      type: integer
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/AssetInput'
+      operationId: set-model-asset
+      summary: Сохранение Asset для модели указанного типа и групп, в которые он входит
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  asset:
+                    $ref: '#/definitions/Asset'
+                  asset_group_ids:
+                    type: array
+                    items:
+                      type: integer
+              meta:
+                $ref: '#/definitions/Metadata'
+  '/assetgroup':
+    get:
+      operationId: get-assetgroups
+      summary: Получение списка групп Asset-ов
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/AssetGroup'
+    post:
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: asset_group_kind_id
+          type: integer
+          description: Id типа группы
+        - in: formData
+          name: name
+          type: string
+          description: Название группы
+      operationId: add-asset-group
+      summary: Добавление новой группы Asset-ов
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/AssetGroup'
+  '/assetgroupkind':
+    get:
+      operationId: get-assetgroup-kind-list
+      summary: Получение списка типов групп Asset-ов (Для выбора при добавлении новой группы)
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/AssetGroupKind'
+  '/assets/enproClassDefect/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Enpro Class Defect
+    get:
+      operationId: get-enpro-class-defect-assets
+      summary: Получение Asset-ов по ID класса дефекта
+      tags:
+        - Assets
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/AssetToir'
+              meta:
+                $ref: '#/definitions/Metadata'
+  '/modelName/{modelName}/wireAssemblyInfo':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название конечной модели OverheadWireInfo или CableInfo
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+        - in: query
+          name: nominalVoltageMin
+          type: number
+          required: false
+          description: Фильтр по минимальному номинальному напряжению
+        - in: query
+          name: nominalVoltageMax
+          type: number
+          required: false
+          description: Фильтр по максимальному номинальному напряжению
+        - in: query
+          name: materialIds
+          type: array
+          items:
+            type: integer
+          required: false
+          description: Фильтр по массиву id Материала (жилы) material (WireMaterialKind)
+        - in: query
+          name: insulationMaterialIds
+          type: array
+          items:
+            type: integer
+          required: false
+          description: Фильтр по массиву id Материала изоляции insulationMaterial (WireInsulationKind)
+        - in: query
+          name: isInsulated
+          type: integer
+          required: false
+          description: Фильтр по Изолированный да-нет (отправлять 0 или 1)
+      operationId: get-wire-assembly-info-list
+      summary: Получение списка WireAssemblyInfo
+      tags:
+        - WireAssemblyInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/WireAssemblyInfo'
+              meta:
+                $ref: '#/definitions/MetadataWireAssemblyInfo'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/WireAssemblyInfoInput'
+      operationId: add-wire-assembly-info
+      summary: Создание WireAssemblyInfo
+      tags:
+        - WireAssemblyInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/WireAssemblyInfo'
+  '/modelName/{modelName}/wireAssemblyInfo/{id}':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название конечной модели OverheadWireInfo или CableInfo
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id WireAssemblyInfo
+    get:
+      operationId: get-wire-assembly-info
+      summary: Получение WireAssemblyInfo по ID
+      tags:
+        - WireAssemblyInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/WireAssemblyInfo'
+              meta:
+                $ref: '#/definitions/Metadata'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/WireAssemblyInfoInput'
+      operationId: update-wire-assembly-info
+      summary: Обновление WireAssemblyInfo
+      tags:
+        - WireAssemblyInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/WireAssemblyInfo'
+    delete:
+      operationId: wire-assembly-info-delete
+      summary: Удаление WireAssemblyInfo
+      tags:
+        - WireAssemblyInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/modelName/{modelName}/switchInfo':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название конечной модели BreakerInfo (Выключатели), RecloserInfo (Реклозеры), FuseInfo (Предохранители) или DisconnectorInfo (Разъединители)
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+        - in: query
+          name: enproBreakerKindId
+          type: integer
+          required: false
+          description: Фильтр по id Принцип гашения дуги (BreakerConstructionKind)
+        - in: query
+          name: ratedVoltageMin
+          type: number
+          required: false
+          description: Фильтр по минимальному номинальному напряжению
+        - in: query
+          name: ratedVoltageMax
+          type: number
+          required: false
+          description: Фильтр по максимальному номинальному напряжению
+        - in: query
+          name: ratedCurrentMin
+          type: number
+          required: false
+          description: Фильтр по минимальному номинальному току
+        - in: query
+          name: ratedCurrentMax
+          type: number
+          required: false
+          description: Фильтр по максимальному номинальному току
+        - in: query
+          name: breakingCapacityMin
+          type: number
+          required: false
+          description: Фильтр по минимальному номинальному току отключения
+        - in: query
+          name: breakingCapacityMax
+          type: number
+          required: false
+          description: Фильтр по максимальному номинальному току отключения
+      operationId: get-switch-info-list
+      summary: Получение списка SwitchInfo
+      tags:
+        - SwitchInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/SwitchInfo'
+              meta:
+                $ref: '#/definitions/MetadataSwitchInfo'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/SwitchInfoInput'
+      operationId: add-switch-info
+      summary: Создание SwitchInfo
+      tags:
+        - SwitchInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/SwitchInfo'
+  '/modelName/{modelName}/SwitchInfo/{id}':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название конечной модели BreakerInfo (Выключатели), RecloserInfo (Реклозеры), FuseInfo (Предохранители) или DisconnectorInfo (Разъединители)
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id SwitchInfo
+    get:
+      operationId: get-switch-info
+      summary: Получение SwitchInfo по ID
+      tags:
+        - SwitchInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/SwitchInfo'
+              meta:
+                $ref: '#/definitions/Metadata'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/SwitchInfoInput'
+      operationId: update-switch-info
+      summary: Обновление SwitchInfo
+      tags:
+        - SwitchInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/SwitchInfo'
+    delete:
+      operationId: wire-switch-info-delete
+      summary: Удаление SwitchInfo
+      tags:
+        - SwitchInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/all_kind/model/{modelName}':
+    parameters:
+      - in: path
+        type: string
+        name: modelName
+        required: true
+        description: Название модели ...Kind
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-kind-list
+      summary: Получение списка записей ...Kind
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Kind'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Kind'
+      operationId: add-kind
+      summary: Создание Kind-а
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Kind'
+  '/all_kind/model/{modelName}/id/{id}':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название модели Kind-а
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Kind-а
+    get:
+      operationId: get-kind-info
+      summary: Получение Kind-а по ID
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Kind'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Kind'
+      operationId: update-kind-info
+      summary: Обновление Kind-а
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Kind'
+    delete:
+      operationId: kind-delete
+      summary: Удаление ...Kind-а
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/all_kind/model/{modelName}/delete':
+    parameters:
+      - in: path
+        type: string
+        name: modelName
+        required: true
+        description: Название модели ...Kind
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              ids:
+                type: array
+                items:
+                  type: integer
+      operationId: add-kind-mass-delete
+      summary: Массовое удаление записей ...Kind-а
+      tags:
+        - All Kinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/all_enum_kind/model/{modelName}':
+    parameters:
+      - in: path
+        type: string
+        name: modelName
+        required: true
+        description: Название модели ...EnumKind
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-enum-kind-list
+      summary: Получение списка записей ...EnumKind
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/EnumKind'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/EnumKind'
+      operationId: add-enum-kind
+      summary: Создание EnumKind-а
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/EnumKind'
+  '/all_enum_kind/model/{modelName}/id/{id}':
+    parameters:
+      - in: path
+        name: modelName
+        type: string
+        required: true
+        description: Название модели EnumKind-а
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Kind-а
+    get:
+      operationId: get-enum-kind-info
+      summary: Получение EnumKind-а по ID
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/EnumKind'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/EnumKind'
+      operationId: update-enum-kind-info
+      summary: Обновление EnumKind-а
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/EnumKind'
+    delete:
+      operationId: enum-kind-delete
+      summary: Удаление ...EnumKind-а
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/all_enum_kind/model/{modelName}/delete':
+    parameters:
+      - in: path
+        type: string
+        name: modelName
+        required: true
+        description: Название модели ...EnumKind
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              ids:
+                type: array
+                items:
+                  type: integer
+      operationId: add-enum-kind-mass-delete
+      summary: Массовое удаление записей ...EnumKind-а
+      tags:
+        - EnumKinds
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/gost':
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-gost-list
+      summary: Получение списка ГОСТов
+      tags:
+        - Gost
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Gost'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Gost'
+      operationId: add-gost
+      summary: Создание ГОСТа
+      tags:
+        - Gost
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Gost'
+  '/gost/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id ГОСТа
+    get:
+      operationId: get-gost-info
+      summary: Получение ГОСТа по ID
+      tags:
+        - Gost
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Gost'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Gost'
+      operationId: update-gost-info
+      summary: Обновление ГОСТа
+      tags:
+        - Gost
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Gost'
+    delete:
+      operationId: gost-delete
+      summary: Удаление Gost
+      tags:
+        - Gost
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/oldTransformerTankInfo':
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+        - in: query
+          name: functionId
+          type: integer
+          required: false
+          description: Фильтр по Функциональному назначению (function_id)
+        - in: query
+          name: ratedUMin
+          type: number
+          required: false
+          description: Фильтр по минимальному Номинальному напряжению обмоток
+        - in: query
+          name: ratedUMax
+          type: number
+          required: false
+          description: Фильтр по максимальному Номинальному напряжению обмоток
+        - in: query
+          name: ratedSMin
+          type: number
+          required: false
+          description: Фильтр по минимальной Номинальной мощности обмоток
+        - in: query
+          name: ratedSMax
+          type: number
+          required: false
+          description: Фильтр по максимальной Номинальной мощности обмоток
+      operationId: get-old-transformer-tank-info-list
+      summary: Получение списка OldTransformerTankInfo
+      tags:
+        - OldTransformerTankInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/OldTransformerTankInfoShort'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/OldTransformerTankInfoInput'
+      operationId: add-old-transformer-tank-info
+      summary: Создание OldTransformerTankInfo
+      tags:
+        - OldTransformerTankInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/OldTransformerTankInfo'
+  '/oldTransformerTankInfo/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id OldTransformerTankInfo
+    get:
+      operationId: get-old-transformer-tank-info
+      summary: Получение OldTransformerTankInfo по ID
+      tags:
+        - OldTransformerTankInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/OldTransformerTankInfo'
+              meta:
+                $ref: '#/definitions/Metadata'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/OldTransformerTankInfoInput'
+      operationId: update-old-transformer-tank-info
+      summary: Обновление OldTransformerTankInfo
+      tags:
+        - OldTransformerTankInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/OldTransformerTankInfo'
+    delete:
+      operationId: old-transformer-tank-delete
+      summary: Удаление OldTransformerTankInfo
+      tags:
+        - OldTransformerTankInfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/procedure':
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-procedure-list
+      summary: Получение списка Procedure
+      tags:
+        - Procedure
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ProcedureShort'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Procedure'
+      operationId: add-procedure
+      summary: Создание Procedure
+      tags:
+        - Procedure
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Procedure'
+  '/procedure/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Procedure
+    get:
+      operationId: get-procedure-info
+      summary: Получение Procedure по ID
+      tags:
+        - Procedure
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Procedure'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Procedure'
+      operationId: update-procedure-info
+      summary: Обновление Procedure
+      tags:
+        - Procedure
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Procedure'
+    delete:
+      operationId: procedure-delete
+      summary: Удаление Procedure
+      tags:
+        - Procedure
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/currenttransformerinfo':
+    get:
+      parameters:
+        - in: query
+          type: string
+          name: search
+          description: Поиск по названию
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-currenttransformerinfo-list
+      summary: Получение списка Трансформатора тока
+      tags:
+        - Currenttransformerinfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Currenttransformerinfo'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Currenttransformerinfo'
+      operationId: add-currenttransformerinfo
+      summary: Создание Трансформатора тока
+      tags:
+        - Currenttransformerinfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Currenttransformerinfo'
+  '/currenttransformerinfo/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Трансформатора тока
+    get:
+      operationId: get-currenttransformerinfo-info
+      summary: Получение Трансформатора тока по ID
+      tags:
+        - Currenttransformerinfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Currenttransformerinfo'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Currenttransformerinfo'
+      operationId: update-currenttransformerinfo-info
+      summary: Обновление Трансформатора тока
+      tags:
+        - Currenttransformerinfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Currenttransformerinfo'
+    delete:
+      operationId: currenttransformerinfo-delete
+      summary: Удаление Трансформатора тока
+      tags:
+        - Currenttransformerinfo
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+  '/ratio':
+    get:
+      parameters:
+        - in: query
+          type: integer
+          name: page
+          description: Номер страницы
+        - in: query
+          type: integer
+          name: perPage
+          description: Записей на страницу
+      operationId: get-ratio-list
+      summary: Получение списка трансформации
+      tags:
+        - Ratio
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Ratio'
+              meta:
+                $ref: '#/definitions/Metadata'
+    post:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Ratio'
+      operationId: add-ratio
+      summary: Создание трансформации
+      tags:
+        - Ratio
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Ratio'
+  '/ratio/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: Id Трансформатора тока
+    get:
+      operationId: get-ratio-info
+      summary: Получение трансформации по ID
+      tags:
+        - Ratio
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Ratio'
+    put:
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Ratio'
+      operationId: update-ratio-info
+      summary: Обновление трансформации
+      tags:
+        - Ratio
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Ratio'
+    delete:
+      operationId: ratio-delete
+      summary: Удаление трансформации
+      tags:
+        - Ratio
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+definitions:
+  AssetInput:
+    type: object
+    properties:
+      IdentifiedObject:
+        $ref: '#/definitions/IdentifiedObjectInput'
+      type:
+        description: type
+        type: string
+      utc_number:
+        type: string
+        description: utcNumber
+      serialnumber:
+        type: string
+        description: serialNumber
+      lot_number:
+        type: string
+        description: lotNumber
+      purchaseprice:
+        type: string
+        description: purchasePrice
+      electronic_address:
+        type: string
+        description: electronicAddress
+      initialcondition:
+        type: integer
+        description: initialCondition
+      initiallossoflife:
+        type: number
+        description: initialLossOfLife
+      enpro_class_defect_id:
+        type: integer
+        description: Id класса дефекта
+      class_object:
+        $ref: '#/definitions/ClassObject'
+      kind_id:
+        type: integer
+        description: Id вида ресурса
+      AssetGroups:
+        description: Массив id групп Asset-а
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+  Asset:
+    type: object
+    properties:
+      IdentifiedObject:
+        $ref: '#/definitions/IdentifiedObject'
+      type:
+        description: type
+        type: string
+      utc_number:
+        type: string
+        description: utcNumber
+      serialnumber:
+        type: string
+        description: serialNumber
+      lot_number:
+        type: string
+        description: lotNumber
+      purchaseprice:
+        type: string
+        description: purchasePrice
+      electronic_address:
+        type: string
+        description: electronicAddress
+      initialcondition:
+        type: integer
+        description: initialCondition
+      initiallossoflife:
+        type: number
+        description: initialLossOfLife
+      enpro_class_defect_id:
+        type: integer
+        description: Id класса дефекта
+      class_object:
+        $ref: '#/definitions/ClassObject'
+      kind:
+        $ref: '#/definitions/Kind'
+      AssetGroups:
+        $ref: '#/definitions/AssetGroup'
+  AssetToir:
+    type: object
+    properties:
+      mrid:
+        description: mrid
+        type: string
+      name:
+        type: string
+        description: Название
+  AssetGroup:
+    type: object
+    properties:
+      id:
+        description: type
+        type: string
+      name:
+        type: string
+        description: utcNumber
+      kind:
+        $ref: '#/definitions/AssetGroupKind'
+  AssetGroupKind:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Id типа группы
+      description:
+        type: string
+        description: Название типа группы
+  ClassObject:
+    type: object
+    properties:
+      id:
+        description: type
+        type: string
+      name:
+        type: string
+        description: utcNumber
+      kind:
+        $ref: '#/definitions/AssetGroupKind'
+  WireAssemblyInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: Информация по ресурсу
+        $ref: '#/definitions/AssetInfo'
+      WirePhaseInfo:
+        description: Фазы проводника
+        type: array
+        items:
+          $ref: '#/definitions/WirePhaseInfoInput'
+  WireAssemblyInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: Информация по ресурсу
+        $ref: '#/definitions/AssetInfo'
+      WirePhaseInfo:
+        description: Фазы проводника
+        type: array
+        items:
+          $ref: '#/definitions/WirePhaseInfo'
+      listInsulated:
+        description: insulated для списка, изолированный или нет
+        type: boolean
+      listMaterial:
+        description: material ru_value для списка Материал (жилы)
+        type: string
+      listNominalVoltage:
+        description: nominalVoltage value для списка Номинальное напряжение
+        type: number
+      phasesCount:
+        description: nominalVoltage value для списка Количество фаз
+        type: integer
+  AssetInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      CatalogAssetType:
+        description: Марка оборудования
+        $ref: '#/definitions/CatalogAssetTypeInput'
+  AssetInfoInput2:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Марка оборудования
+        $ref: '#/definitions/IdentifiedObjectInput'
+  AssetInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      CatalogAssetType:
+        description: Марка оборудования
+        $ref: '#/definitions/CatalogAssetType'
+  AssetInfo2:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Родительский IdentifiedObject
+        $ref: '#/definitions/IdentifiedObject'
+  CatalogAssetTypeInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Объект информационной модели
+        $ref: '#/definitions/IdentifiedObjectInput'
+  CatalogAssetType:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Объект информационной модели
+        $ref: '#/definitions/IdentifiedObject'
+  IdentifiedObjectInput:
+    type: object
+    properties:
+      id:
+        description: Id объекта информационной модели
+        type: integer
+      name:
+        description: Название объекта информационной модели
+        type: string
+      names:
+        description: Другие названия
+        type: array
+        items:
+          $ref: '#/definitions/Name'
+  IdentifiedObject:
+    type: object
+    properties:
+      id:
+        description: Id объекта информационной модели
+        type: integer
+      name:
+        description: Название объекта информационной модели
+        type: string
+      mRID:
+        description: Глобальный уникальный идентификатор
+        type: string
+      names:
+        description: Другие названия
+        type: array
+        items:
+          $ref: '#/definitions/Name'
+  Name:
+    type: object
+    properties:
+      id:
+        description: Id дополнительного названия
+        type: integer
+      name:
+        description: Дополнительное название
+        type: string
+  WirePhaseInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      phase_info_id:
+        description: id фазы SinglePhaseKind
+        type: integer
+      WireInfo:
+        description: Марка проводов
+        $ref: '#/definitions/WireInfoInput'
+  WirePhaseInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      phaseInfo:
+        description: Enum список SinglePhaseKind
+        $ref: '#/definitions/EnumKind'
+      WireInfo:
+        description: Марка проводов
+        $ref: '#/definitions/WireInfo'
+  EnumKind:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      literal:
+        description: Условное обозначение
+        type: string
+      value:
+        description: Индексное значение (не выводить в списке)
+        type: string
+      ru_value:
+        description: Описание (рус)
+        type: string
+      description:
+        description: Описание (англ) (не выводить в списке)
+        type: string
+      enpro_code:
+        description: Код Enpro
+        type: string
+  WireInfoInput:
+    type: object
+    properties:
+      insulated:
+        description: Изолированный провод? (OverheadWireInfo, для CableInfo всегда true, зашить в форме в select-е)
+        type: boolean
+      material_id:
+        description: Материал WireMaterialKind (OverheadWireInfo, CableInfo)
+        type: integer
+      sizeDescription:
+        description: Сечение основное/сердечника, мм (OverheadWireInfo, CableInfo)
+        type: string
+      strandCount:
+        type: integer
+        description: Количество проволок основного материала (OverheadWireInfo, CableInfo)
+      coreStrandCount:
+        type: integer
+        description: Количество проволок в стальном сердечнике (OverheadWireInfo)
+      coreRadius:
+        $ref: '#/definitions/DataType'
+        description: Диаметр сердечника  (OverheadWireInfo)
+      radius:
+        $ref: '#/definitions/DataType'
+        description: Диаметр провода  (OverheadWireInfo, CableInfo)
+      insulation_material_id:
+        description: Материал изоляции WireInsulationKind (OverheadWireInfo, CableInfo)
+        type: integer
+      insulationThickness:
+        description: Толщина изоляции (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      ratedCurrent:
+        description: Длительно допустимый ток (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      rDC20:
+        description: Электрическое сопротивление постоянному току при  20°С (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      enproBreakForce:
+        description: Разрывное усилие провода (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      enproWeightPerLength:
+        description: Масса 1 км провода (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      nominalVoltage:
+        description: Номинальное напряжение (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      standardServiceLife:
+        description: Нормативный срок службы (CableInfo)
+        $ref: '#/definitions/Duration'
+      gost_id:
+        description: Гост (OverheadWireInfo, CableInfo)
+        type: integer
+      OverheadWireInfo:
+        description: Проводник воздушной ЛЭП (OverheadWireInfo)
+        $ref: '#/definitions/OverheadWireInfoInput'
+      CableInfo:
+        description: Кабель (CableInfo)
+        $ref: '#/definitions/CableInfoInput'
+  WireInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      insulated:
+        description: Изолированный провод? (OverheadWireInfo, для CableInfo всегда true, зашить в форме в select-е)
+        type: boolean
+      material:
+        description: Материал (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/Kind'
+      sizeDescription:
+        description: Сечение основное/сердечника, мм (OverheadWireInfo, CableInfo)
+        type: string
+      strandCount:
+        type: integer
+        description: Количество проволок основного материала (OverheadWireInfo, CableInfo)
+      coreStrandCount:
+        type: integer
+        description: Количество проволок в стальном сердечнике (OverheadWireInfo)
+      coreRadius:
+        $ref: '#/definitions/DataType'
+        description: Диаметр сердечника (OverheadWireInfo)
+      radius:
+        $ref: '#/definitions/DataType'
+        description: Диаметр провода (жилы) (OverheadWireInfo, CableInfo)
+      insulationMaterial:
+        description: Материал изоляции (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/Kind'
+      insulationThickness:
+        description: Толщина изоляции (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      ratedCurrent:
+        description: Длительно допустимый ток (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      rDC20:
+        description: Электрическое сопротивление постоянному току при  20°С (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      enproBreakForce:
+        description: Разрывное усилие провода (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      enproWeightPerLength:
+        description: Масса 1 км провода (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      nominalVoltage:
+        description: Номинальное напряжение (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/DataType'
+      standardServiceLife:
+        description: Нормативный срок службы (CableInfo)
+        $ref: '#/definitions/Duration'
+      enproGost:
+        description: Гост (OverheadWireInfo, CableInfo)
+        $ref: '#/definitions/Gost'
+      OverheadWireInfo:
+        description: Проводник воздушной ЛЭП (OverheadWireInfo)
+        $ref: '#/definitions/OverheadWireInfo'
+      CableInfo:
+        description: Кабель (CableInfo)
+        $ref: '#/definitions/CableInfo'
+  OverheadWireInfoInput:
+    type: object
+    properties:
+      value:
+        description: При создании из формы отправлять value=1, так как пустой объект с голым id-шником
+        type: integer
+  OverheadWireInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+  CableInfoInput:
+    type: object
+    properties:
+      construction_kind_id:
+        description: Конструктивное исполнение токопроводящих жил CableConstructionKind
+        type: integer
+      fire_safety_id:
+        description: Исполнение по пожароопасности EnproFireSafetyKind
+        type: integer
+      shield_material_id:
+        description: Тип брони CableShieldMaterialKind
+        type: integer
+      outer_jacket_kind_id:
+        description: Материал наружной оболочки CableOuterJacketKind
+        type: integer
+      diameterOverJacket:
+        $ref: '#/definitions/DataType'
+        description: Внешний диаметр кабеля (CableInfo)
+  CableInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      constructionKind:
+        description: Конструктивное исполнение токопроводящих жил CableConstructionKind
+        $ref: '#/definitions/Kind'
+      fireSafety:
+        description: Исполнение по пожароопасности EnproFireSafetyKind
+        $ref: '#/definitions/Kind'
+      shieldMaterial:
+        description: Тип брони CableShieldMaterialKind
+        $ref: '#/definitions/Kind'
+      outerJacketKind:
+        description: Материал наружной оболочки CableOuterJacketKind
+        $ref: '#/definitions/Kind'
+      diameterOverJacket:
+        $ref: '#/definitions/DataType'
+        description: Внешний диаметр кабеля (CableInfo)
+  SwitchInfoInput:
+    type: object
+    properties:
+      AssetInfo:
+        description: Информация по ресурсу
+        $ref: '#/definitions/AssetInfo'
+      enpro_breaker_kind_id:
+        description: Id Принцип гашения дуги BreakerConstructionKind (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, BreakerInfo)
+        type: integer
+      enpro_interrupter_position_id:
+        description: Id Вид размещения ДГУ InterrupterPositionKind (FuseInfo, BreakerInfo)
+        type: integer
+      ratedVoltage:
+        description: Номинальное напряжение Voltage кВ (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproMaxVoltage:
+        description: Наибольшее рабочее напряжение Voltage кВ (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedFrequency:
+        description: Номинальная частота Frequency Гц (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedCurrent:
+        description: Номинальный ток выключателя CurrentFlow А (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      breakingCapacity:
+        description: Номинальный ток отключения CurrentFlow кА (FuseInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedInterruptingTime:
+        description: Собственное время отключения Seconds с (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedImpulseWithstandVoltage:
+        description: Номинальное импульсное напряжение полного грозового импульса относительно земли Voltage кВ (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproRatedPressure:
+        description: Номинальное давление газа Pressure Па (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      lowPressureAlarm:
+        description: Нижний предел давления Pressure Па (срабатывания предупредительной сигнализации) Pressure (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      lowPressureLockOut:
+        description: Давление блокировки работы выключатели Pressure Па (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproBreakForce:
+        description: Допустимое горизонтальное натяжение провода вдоль фазы EnproForce Н (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproInsulationLength:
+        description: Длина пути утечки внешней изоляции Length (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enpro_climatic_mod_placement_id:
+        description: Климатическое исполнение и категория размещения GostClimaticModPlacementKind (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: integer
+      enproTemperatureRange:
+        description: Диапазон рабочих температур (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/TemperatureRange'
+      enpro_gost_id:
+        description: Id ГОСТ (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: integer
+      isSinglePhase:
+        description: Однополюсный (FuseInfo, DisconnectorInfo, BreakerInfo)
+        type: boolean
+      isUnganged:
+        description: Управляется пофазно (DisconnectorInfo, BreakerInfo)
+        type: boolean
+      gasWeightPerTank:
+        description: Вес газа в баке элегазового выключателя Mass (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      oilVolumePerTank:
+        description: Вес масла в баке масляного выключателя Mass (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      OldSwitchInfo:
+        $ref: '#/definitions/OldSwitchInfoInput'
+  SwitchInfo:
+    type: object
+    properties:
+      AssetInfo:
+        description: Информация по ресурсу
+        $ref: '#/definitions/AssetInfo'
+      enproBreakerKind:
+        description: Принцип гашения дуги BreakerConstructionKind (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, BreakerInfo)
+        $ref: '#/definitions/Kind'
+      enproInterrupterPosition:
+        description: Вид размещения ДГУ InterrupterPositionKind (FuseInfo, BreakerInfo)
+        $ref: '#/definitions/Kind'
+      ratedVoltage:
+        description: Номинальное напряжение Voltage (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproMaxVoltage:
+        description: Наибольшее рабочее напряжение Voltage (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedFrequency:
+        description: Номинальная частота Frequency (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedCurrent:
+        description: Номинальный ток CurrentFlow (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      breakingCapacity:
+        description: Номинальный ток отключения CurrentFlow (FuseInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedInterruptingTime:
+        description: Собственное время отключения Seconds (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedImpulseWithstandVoltage:
+        description: Номинальное импульсное напряжение полного грозового импульса относительно земли Voltage (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproRatedPressure:
+        description: Номинальное давление газа Pressure (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      lowPressureAlarm:
+        description: Нижний предел давления (срабатывания предупредительной сигнализации) Pressure (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      lowPressureLockOut:
+        description: Давление блокировки работы выключатели Pressure (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproBreakForce:
+        description: Допустимое горизонтальное натяжение провода вдоль фазы EnproForce Н (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproInsulationLength:
+        description: Длина пути утечки внешней изоляции Length м (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproClimaticModPlacement:
+        description: Климатическое исполнение и категория размещения GostClimaticModPlacementKind (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/Kind'
+      enproTemperatureRange:
+        description: Диапазон рабочих температур (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/TemperatureRange'
+      enproGost:
+        description: ГОСТ (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/Gost'
+      isSinglePhase:
+        description: Однополюсный (FuseInfo, DisconnectorInfo, BreakerInfo)
+        type: boolean
+      isUnganged:
+        description: Управляется пофазно (DisconnectorInfo, BreakerInfo)
+        type: boolean
+      gasWeightPerTank:
+        description: Вес газа в баке элегазового выключателя Mass кг (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      oilVolumePerTank:
+        description: Вес масла в баке масляного выключателя Mass кг (BreakerInfo)
+        $ref: '#/definitions/DataType'
+      OldSwitchInfo:
+        $ref: '#/definitions/OldSwitchInfo'
+  OldSwitchInfoInput:
+    type: object
+    properties:
+      loadBreak:
+        description: Выключатель нагрузки (всегда-ДА, редактировать нельзя) (LoadBreakSwitchInfo)
+        type: boolean
+      poleCount:
+        description: Количество полюсов (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: integer
+      withstandCurrent:
+        description: Номинальный ток термической стойкости по ГОСТ 6827 CurrentFlow кА (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      makingCapacity:
+        description: Время протекания тока КЗ ГОСТ 6827 CurrentFlow кА (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproEarthSwitchCurrentDuration:
+        description: Время протекания тока КЗ заземлителей Seconds (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo)
+        $ref: '#/definitions/DataType'
+      enpro_secondary_voltage_kind_id:
+        description: Id Номинальная частота питания вкл. и отк. устройств, вспом. цепей и цепей упр. SecondaryCircuitsVoltageKind (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: integer
+      enproSecondaryVoltage:
+        description: Номинальное напряжение цепей управления и вспомогательных цепей привода Voltage В (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      remote:
+        description: Поддерживает дистанционное управление (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: boolean
+      BreakerInfo:
+        $ref: '#/definitions/BreakerInfoInput'
+      RecloserInfo:
+        $ref: '#/definitions/RecloserInfoInput'
+      FuseInfo:
+        $ref: '#/definitions/FuseInfoInput'
+      DisconnectorInfo:
+        $ref: '#/definitions/DisconnectorInfoInput'
+      LoadBreakSwitchInfo:
+        $ref: '#/definitions/LoadBreakSwitchInfoInput'
+  OldSwitchInfo:
+    type: object
+    properties:
+      loadBreak:
+        description: Выключатель нагрузки (всегда-ДА, редактировать нельзя) (LoadBreakSwitchInfo)
+        type: boolean
+      poleCount:
+        description: Количество полюсов (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: integer
+      withstandCurrent:
+        description: Номинальный ток термической стойкости по ГОСТ 6827 CurrentFlow (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      makingCapacity:
+        description: Время протекания тока КЗ ГОСТ 6827 CurrentFlow (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproEarthSwitchCurrentDuration:
+        description: Время протекания тока КЗ заземлителей Seconds (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo)
+        $ref: '#/definitions/DataType'
+      enproSecondaryVoltageKind:
+        description: Номинальная частота питания вкл. и отк. устройств, вспом. цепей и цепей упр. SecondaryCircuitsVoltageKind (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/Kind'
+      enproSecondaryVoltage:
+        description: Номинальное напряжение цепей управления и вспомогательных цепей привода Voltage (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      remote:
+        description: Поддерживает дистанционное управление (RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        type: boolean
+      BreakerInfo:
+        $ref: '#/definitions/BreakerInfo'
+      RecloserInfo:
+        $ref: '#/definitions/RecloserInfo'
+      FuseInfo:
+        $ref: '#/definitions/FuseInfo'
+      DisconnectorInfo:
+        $ref: '#/definitions/DisconnectorInfo'
+      LoadBreakSwitchInfo:
+        $ref: '#/definitions/LoadBreakSwitchInfo'
+  BreakerInfoInput:
+    type: object
+    properties:
+      value:
+        description: Отправляется value=1 чтобы создался пустой объект и присвоился id
+        type: integer
+  RecloserInfoInput:
+    type: object
+    properties:
+      value:
+        description: Отправляется value=1 чтобы создался пустой объект и присвоился id
+        type: integer
+  FuseInfoInput:
+    type: object
+    properties:
+      value:
+        description: Отправляется value=1 чтобы создался пустой объект и присвоился id
+        type: integer
+  DisconnectorInfoInput:
+    type: object
+    properties:
+      value:
+        description: Отправляется value=1 чтобы создался пустой объект и присвоился id
+        type: integer
+  LoadBreakSwitchInfoInput:
+    type: object
+    properties:
+      value:
+        description: Отправляется value=1 чтобы создался пустой объект и присвоился id
+        type: integer
+  BreakerInfo:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+  RecloserInfo:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+  FuseInfo:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+  DisconnectorInfo:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+  LoadBreakSwitchInfo:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+  Kind:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      value:
+        type: string
+        description: Значение
+      ru_value:
+        type: string
+        description: Русское значение
+      enpro_code:
+        type: string
+        description: Русское значение
+      description:
+        type: string
+        description: Описание
+  DataType:
+    type: object
+    properties:
+      id:
+        description: id - опционально, есть при редактировании. При создании новой записи присвоится сам
+        type: integer
+      value:
+        type: number
+        description: Значение
+  Gost:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      name:
+        type: string
+        description: Название ГОСТа
+      keylink:
+        type: string
+        description: Ссылка на ГОСТ
+  OldTransformerTankInfoShort:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      TransformerTankInfo:
+        description: Гост
+        $ref: '#/definitions/TransformerTankInfo'
+  OldTransformerTankInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      TransformerTankInfo:
+        description: Гост
+        $ref: '#/definitions/TransformerTankInfo'
+      construction_kind_id:
+        description: Тип конструкции TransformerConstructionKind
+        type: integer
+      coreCoilsWeight:
+        description: Вес активной части
+        $ref: '#/definitions/DataType'
+      core_kind_id:
+        description: Тип сердечника TransformerCoreKind
+        type: integer
+      function_id:
+        description: Функциональное назначение TransformerFunctionKind
+        type: integer
+      cooling_kind_id:
+        description: Вид охлаждения TransformerCoolingKind
+        type: integer
+      enproFullWeight:
+        description: Масса полная
+        $ref: '#/definitions/DataType'
+      enproOilWeight:
+        description: Масса масла
+        $ref: '#/definitions/DataType'
+      enproTemperatureRange:
+        description: Диапазон рабочих температур
+        $ref: '#/definitions/TemperatureRange'
+      gost_id:
+        description: Гост id Gost
+        type: integer
+      TransformerEndInfoInput:
+        description: Обмотки трансформатора
+        type: array
+        items:
+          $ref: '#/definitions/TransformerEndInfoInput'
+  OldTransformerTankInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      TransformerTankInfo:
+        description: Гост
+        $ref: '#/definitions/TransformerTankInfo'
+      constructionKind:
+        description: Тип конструкции
+        $ref: '#/definitions/Kind'
+      coreCoilsWeight:
+        description: Вес активной части
+        $ref: '#/definitions/DataType'
+      coreKind:
+        description: Тип сердечника
+        $ref: '#/definitions/Kind'
+      function:
+        description: Функциональное назначение
+        $ref: '#/definitions/Kind'
+      coolingKind:
+        description: Вид охлаждения
+        $ref: '#/definitions/Kind'
+      enproFullWeight:
+        description: Масса полная
+        $ref: '#/definitions/DataType'
+      enproOilWeight:
+        description: Масса масла
+        $ref: '#/definitions/DataType'
+      enproTemperatureRange:
+        description: Диапазон рабочих температур
+        $ref: '#/definitions/TemperatureRange'
+      enproGost:
+        description: Гост
+        $ref: '#/definitions/Gost'
+      TransformerEndInfo:
+        description: Обмотки трансформатора
+        type: array
+        items:
+          $ref: '#/definitions/TransformerEndInfo'
+  TransformerEndInfoShort:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: Родительский AssetInfo
+        $ref: '#/definitions/AssetInfo2'
+  TransformerEndInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: родительский AssetInfo
+        $ref: '#/definitions/AssetInfoInput2'
+      endNumber:
+        type: integer
+        description: Номер обмотки
+      ratedS:
+        description: Полная номинальная мощность кВА ApparentPower
+        $ref: '#/definitions/DataType'
+      ratedU:
+        description: Номинальное напряжение кВ Voltage
+        $ref: '#/definitions/DataType'
+      connection_kind_id:
+        description: Id Enum WindingConnection
+        type: integer
+      phaseAngleClock:
+        description: Группа соединения - целое число от 0 до 11, сделать select
+        type: integer
+      r:
+        description: Сопротивление постоянному току Ом Resistance
+        $ref: '#/definitions/DataType'
+      OldTransformerEndInfo:
+        $ref: '#/definitions/OldTransformerEndInfoInput'
+      ShortCircuitTests:
+        type: array
+        items:
+          $ref: '#/definitions/ShortCircuitTestInput'
+      NoLoadTests:
+        type: array
+        items:
+          $ref: '#/definitions/NoLoadTestInput'
+  TransformerEndInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: родительский AssetInfo
+        $ref: '#/definitions/AssetInfo2'
+      endNumber:
+        type: integer
+        description: Номер обмотки
+      ratedS:
+        description: Полная номинальная мощность кВА ApparentPower
+        $ref: '#/definitions/DataType'
+      ratedU:
+        description: Номинальное напряжение кВ Voltage
+        $ref: '#/definitions/DataType'
+      connectionKind:
+        description: Enum WindingConnection
+        $ref: '#/definitions/EnumKind'
+      phaseAngleClock:
+        description: Группа соединения - целое число от 0 до 11, сделать select
+        type: integer
+      r:
+        description: Сопротивление постоянному току Resistance
+        $ref: '#/definitions/DataType'
+      OldTransformerEndInfo:
+        $ref: '#/definitions/OldTransformerEndInfo'
+      ShortCircuitTests:
+        type: array
+        items:
+          $ref: '#/definitions/ShortCircuitTest'
+      NoLoadTests:
+        type: array
+        items:
+          $ref: '#/definitions/NoLoadTest'
+  OldTransformerEndInfoInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      winding_insulation_kind_id:
+        description: Id Тип изоляции WindingInsulationKind
+        type: integer
+  OldTransformerEndInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      windingInsulationKind:
+        description: Тип изоляции WindingInsulationKind
+        $ref: '#/definitions/Kind'
+  ShortCircuitTestInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      energised_end_id:
+        description: Обмотка, на которую подано напряжение Id TransformerEndInfo required
+        type: integer
+      GroundedEnds:
+        description: Обмотки закороченные Массив Id TransformerEndInfo required
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Id TransformerEndInfo, которые не выбраны в energised_end_id
+      loss:
+        description: Потери КЗ (Pкз) KiloActivePower
+        $ref: '#/definitions/DataType'
+      voltage:
+        description: Напряжение КЗ (Uк%) PerCent
+        $ref: '#/definitions/DataType'
+      TransformerTest:
+        description: Родительский TransformerTest
+        $ref: '#/definitions/TransformerTest'
+  ShortCircuitTest:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      EnergisedEnd:
+        description: Обмотка TransformerEndInfo
+        $ref: '#/definitions/TransformerEndInfoShort'
+      GroundedEnds:
+        description: Обмотки закороченные TransformerEndInfo
+        type: array
+        items:
+          type: array
+          items:
+            $ref: '#/definitions/TransformerEndInfoShort'
+      loss:
+        description: Потери КЗ (Pкз) KiloActivePower
+        $ref: '#/definitions/DataType'
+      voltage:
+        description: Напряжение КЗ (Uк%) PerCent
+        $ref: '#/definitions/DataType'
+      TransformerTest:
+        description: Родительский TransformerTest
+        $ref: '#/definitions/TransformerTest'
+  NoLoadTestInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      energised_end_id:
+        description: Обмотка, на которую подано напряжение Id OldTransformerEndInfo required
+        type: integer
+      loss:
+        description: Потери ХХ KiloActivePower
+        $ref: '#/definitions/DataType'
+      excitingCurrent:
+        description: Ток ХХ PerCent
+        $ref: '#/definitions/DataType'
+      TransformerTest:
+        description: Родительский TransformerTest
+        $ref: '#/definitions/TransformerTestInput'
+  NoLoadTest:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      EnergisedEnd:
+        description: Обмотка TransformerEndInfo
+        $ref: '#/definitions/TransformerEndInfoShort'
+      loss:
+        description: Потери ХХ KiloActivePower
+        $ref: '#/definitions/DataType'
+      excitingCurrent:
+        description: Ток ХХ PerCent
+        $ref: '#/definitions/DataType'
+      TransformerTest:
+        description: Родительский TransformerTest
+        $ref: '#/definitions/TransformerTest'
+  TransformerTest:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Родительский IO
+        $ref: '#/definitions/IdentifiedObject'
+      temperature:
+        description: Температура °C Temperature
+        $ref: '#/definitions/DataType'
+  TransformerTestInput:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      IdentifiedObject:
+        description: Родительский IO
+        $ref: '#/definitions/IdentifiedObjectInput'
+      temperature:
+        description: Температура °C Temperature
+        $ref: '#/definitions/DataType'
+  TemperatureRange:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      minTemperature:
+        description: Минимальная температура
+        $ref: '#/definitions/DataType'
+      maxTemperature:
+        description: Максимальная температура
+        $ref: '#/definitions/DataType'
+  TransformerTankInfo:
+    type: object
+    properties:
+      id:
+        description: Id
+        type: integer
+      AssetInfo:
+        description: Информарция по ресурсу
+        $ref: '#/definitions/AssetInfo'
+  Duration:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      value:
+        type: object
+        properties:
+          years:
+            type: integer
+            description: Количество лет
+  ProcedureShort:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      Document:
+        description: Родительский документ
+        $ref: '#/definitions/Document'
+  Procedure:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      Document:
+        description: Родительский документ
+        $ref: '#/definitions/Document'
+      measurements:
+        description: Дефекты
+        type: array
+        items:
+          $ref: '#/definitions/EnproDefect'
+  Document:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      IdentifiedObject:
+        description: Родительский IO
+        $ref: '#/definitions/IdentifiedObject'
+  EnproDefect:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      code:
+        description: code
+        type: string
+      title:
+        description: title
+        type: string
+      EnproClassDefect:
+        description: Группа оборудования
+        $ref: '#/definitions/EnproClassDefect'
+      EnproGroupDefect:
+        description: Группа дефектов
+        $ref: '#/definitions/EnproGroupDefect'
+  EnproClassDefect:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      type:
+        description: type
+        type: string
+      class:
+        description: class
+        type: string
+      title:
+        description: title
+        type: string
+  EnproGroupDefect:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      code_group:
+        description: code_group
+        type: string
+      title:
+        description: title
+        type: string
+  Metadata:
+    description: Metadatamodel
+    properties:
+      pagination:
+        $ref: '#/definitions/Pagination'
+  MetadataWireAssemblyInfo:
+    description: Metadatamodel
+    properties:
+      pagination:
+        $ref: '#/definitions/Pagination'
+      filters:
+        $ref: '#/definitions/FiltersWireAssemblyInfo'
+  MetadataSwitchInfo:
+    description: Metadatamodel
+    properties:
+      pagination:
+        $ref: '#/definitions/Pagination'
+      filters:
+        $ref: '#/definitions/FiltersSwitchInfo'
+  Pagination:
+    description: Pagination model
+    properties:
+      page:
+        title: Page
+        description: Number of page
+        type: integer
+        format: int64
+        example: 1
+      size:
+        title: Size
+        description: Size is amunt of rows
+        type: integer
+        format: int64
+        example: 20
+      last_page:
+        title: LastPage
+        description: Number of the last page
+        type: integer
+        format: int64
+        example: 5
+      total:
+        title: Total
+        description: Total of rows with filters sent
+        type: integer
+        format: int64
+        example: 45
+  FiltersWireAssemblyInfo:
+    description: Фильтры проводов и кабелей
+    properties:
+      nominalVoltageMin:
+        description: Минимальное значение номинального напряжения
+        type: number
+      nominalVoltageMax:
+        description: Максимальное значение номинального напряжения
+        type: number
+      materialIds:
+        description: Массив id материала (жилы) material (WireMaterialKind)
+        type: array
+        items:
+          type: integer
+      insulationMaterialIds:
+        description: Массив id Материала изоляции insulationMaterial (WireInsulationKind)
+        type: array
+        items:
+          type: integer
+      isInsulated:
+        description: Изолированный провод (1 да, 0 нет)
+        type: integer
+  FiltersSwitchInfo:
+    description: Фильтры коммутационных аппаратов
+    properties:
+      enproBreakerKindId:
+        description: id Принцип гашения дуги (BreakerConstructionKind)
+        type: integer
+      ratedVoltageMin:
+        description: Минимальное значение номинального напряжения
+        type: number
+      ratedVoltageMax:
+        description: Максимальное значение номинального напряжения
+        type: number
+      ratedCurrentMin:
+        description: Минимальное значение номинального тока
+        type: number
+      ratedCurrentMax:
+        description: Максимальное значение номинального тока
+        type: number
+      breakingCapacityMin:
+        description: Минимальное значение номинального тока отключения
+        type: number
+      breakingCapacityMax:
+        description: Максимальное значение номинального тока отключения
+        type: number
+  Ratio:
+    type: object
+    properties:
+      id:
+        description: id
+        type: integer
+      denominator:
+        type: integer
+        description: Деномиратор
+      numerator:
+        type: integer
+        description: Нумератор
+  Currenttransformerinfo:
+    type: object
+    properties:
+      AssetInfo:
+        description: Информация по ресурсу
+        $ref: '#/definitions/AssetInfo'
+      ratedCurrent:
+        description: Номинальный ток CurrentFlow (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      ratedFrequency:
+        description: Номинальная частота Frequency (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproMaxVoltage:
+        description: Наибольшее рабочее напряжение Voltage (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      enproClimaticModPlacement:
+        description: Климатическое исполнение и категория размещения GostClimaticModPlacementKind (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/Kind'
+      nominalRatio:
+        description: Номинальный коэффициент трансформации Ratio
+        $ref: '#/definitions/Ratio'
+      ratedVoltage:
+        description: Номинальное напряжение Voltage (FuseInfo, RecloserInfo, LoadBreakSwitchInfo, DisconnectorInfo, BreakerInfo)
+        $ref: '#/definitions/DataType'
+      corecount:
+        description: Количество вторичных обмоток
+        type: integer
+      accuracyclass:
+        description: КоличествоКласс точности
+        type: string

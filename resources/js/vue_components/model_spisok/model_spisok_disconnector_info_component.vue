@@ -1,0 +1,612 @@
+<template>
+  <section>
+    <!-- индикатор загрузки -->
+    <div v-if="loading">
+      <img
+        src="/public/uploads/loading.gif"
+        style="
+          width: 150px;
+          position: fixed;
+          margin: auto;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 9999;
+        "
+      />
+    </div>
+
+    <div v-else-if="errored" class="alert alert-danger" role="alert">
+      Запрос к серверу не прошел! Попробуйте, пожалуйста, позже!
+      <img
+        src="/public/uploads/icons/reload.svg"
+        style="width: 25px; margin-left: 5px"
+        v-on:click="funLoadAll()"
+      />
+    </div>
+
+    <!-- поисковая строчка -->
+    <div class="search-bar">
+      <a
+        class="search-bar-filter-btn"
+        :class="{ 'search-bar-filter-btn-dot': filterIsset }"
+        data-toggle="collapse"
+        href="#collapseTableFilter"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseTableFilter"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:svgjs="http://svgjs.com/svgjs"
+          version="1.1"
+          width="36"
+          height="36"
+          x="0"
+          y="0"
+          viewBox="0 0 512 512"
+          style="enable-background: new 0 0 512 512"
+          xml:space="preserve"
+          class=""
+        >
+          <g>
+            <g xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="m420.404 0h-328.808c-50.506 0-91.596 41.09-91.596 91.596v328.809c0 50.505 41.09 91.595 91.596 91.595h328.809c50.505 0 91.595-41.09 91.595-91.596v-328.808c0-50.506-41.09-91.596-91.596-91.596zm61.596 420.404c0 33.964-27.632 61.596-61.596 61.596h-328.808c-33.964 0-61.596-27.632-61.596-61.596v-328.808c0-33.964 27.632-61.596 61.596-61.596h328.809c33.963 0 61.595 27.632 61.595 61.596z"
+                fill="#ffffff"
+                data-original="#000000"
+                style=""
+                class=""
+              />
+              <path
+                d="m432.733 112.467h-228.461c-6.281-18.655-23.926-32.133-44.672-32.133s-38.391 13.478-44.672 32.133h-35.661c-8.284 0-15 6.716-15 15s6.716 15 15 15h35.662c6.281 18.655 23.926 32.133 44.672 32.133s38.391-13.478 44.672-32.133h228.461c8.284 0 15-6.716 15-15s-6.716-15-15.001-15zm-273.133 32.133c-9.447 0-17.133-7.686-17.133-17.133s7.686-17.133 17.133-17.133 17.133 7.686 17.133 17.133-7.686 17.133-17.133 17.133z"
+                fill="#ffffff"
+                data-original="#000000"
+                style=""
+                class=""
+              />
+              <path
+                d="m432.733 241h-35.662c-6.281-18.655-23.927-32.133-44.672-32.133s-38.39 13.478-44.671 32.133h-228.461c-8.284 0-15 6.716-15 15s6.716 15 15 15h228.461c6.281 18.655 23.927 32.133 44.672 32.133s38.391-13.478 44.672-32.133h35.662c8.284 0 15-6.716 15-15s-6.716-15-15.001-15zm-80.333 32.133c-9.447 0-17.133-7.686-17.133-17.133s7.686-17.133 17.133-17.133 17.133 7.686 17.133 17.133-7.686 17.133-17.133 17.133z"
+                fill="#ffffff"
+                data-original="#000000"
+                style=""
+                class=""
+              />
+              <path
+                d="m432.733 369.533h-164.194c-6.281-18.655-23.926-32.133-44.672-32.133s-38.391 13.478-44.672 32.133h-99.928c-8.284 0-15 6.716-15 15s6.716 15 15 15h99.928c6.281 18.655 23.926 32.133 44.672 32.133s38.391-13.478 44.672-32.133h164.195c8.284 0 15-6.716 15-15s-6.716-15-15.001-15zm-208.866 32.134c-9.447 0-17.133-7.686-17.133-17.133s7.686-17.133 17.133-17.133 17.133 7.685 17.133 17.132-7.686 17.134-17.133 17.134z"
+                fill="#ffffff"
+                data-original="#000000"
+                style=""
+                class=""
+              />
+            </g>
+          </g>
+        </svg>
+      </a>
+      <input
+        class="form-control"
+        type="text"
+        v-model.trim="filterName"
+        @keyup.enter="funLoadContent()"
+        placeholder="Поиск по наименованию"
+        ref="search"
+      />
+      <button
+        v-if="filterName.length > 0"
+        type="button"
+        class="button position-absolute search-bar-reset-btn"
+        @click="funSearchClear()"
+      >
+        <span class="icon icon-close mr-0"> </span>
+      </button>
+    </div>
+    <div class="col-md-12 filter-container collapse" id="collapseTableFilter">
+      <div class="filter-bar row">
+        <div class="input-range-slider col-md-6">
+          <div class="form-group mb-0">
+            <label for="#nom-min">Номинальное напряжение</label>
+            <div class="d-flex r-input-container mb-2">
+              <div class="input-group form-field">
+                <input
+                  type="text"
+                  class="form-control text-field"
+                  v-model.number="filter.ratedVoltage.min"
+                  id="nom-min"
+                  placeholder="Минимальное"
+                  aria-describedby="inputGroupPrepend2"
+                  required
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroupPrepend2"
+                    >кВ</span
+                  >
+                </div>
+              </div>
+              <div class="input-group form-field">
+                <input
+                  type="text"
+                  class="form-control text-field"
+                  v-model.number="filter.ratedVoltage.max"
+                  id="nom-max"
+                  placeholder="Максимальное"
+                  aria-describedby="inputGroupPrepend3"
+                  required
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroupPrepend3"
+                    >кВ</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="input-range-slider col-md-6">
+          <div class="form-group mb-0">
+            <label for="#nom-min">Номинальный ток разъединителя</label>
+            <div class="d-flex r-input-container mb-2">
+              <div class="input-group form-field">
+                <input
+                  type="text"
+                  class="form-control text-field"
+                  v-model.number="filter.ratedCurrent.min"
+                  id="nom-min"
+                  placeholder="Минимальное"
+                  aria-describedby="inputGroupPrepend4"
+                  required
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroupPrepend4"
+                    >А</span
+                  >
+                </div>
+              </div>
+              <div class="input-group form-field">
+                <input
+                  type="text"
+                  class="form-control text-field"
+                  v-model.number="filter.ratedCurrent.max"
+                  id="nom-max"
+                  placeholder="Максимальное"
+                  aria-describedby="inputGroupPrepend5"
+                  required
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroupPrepend5"
+                    >А</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="d-flex align-items-center justify-content-end">
+            <button
+              type="button"
+              class="
+                mr-4
+                button
+                bordered
+                d-flex
+                align-items-center
+                justify-content-center
+                text-center
+              "
+              style="min-width: 140px"
+              @click="clearFiltering()"
+            >
+              <span>Сбросить</span>
+            </button>
+            <button
+              type="button"
+              class="
+                button
+                bordered
+                d-flex
+                align-items-center
+                justify-content-center
+                text-center
+              "
+              style="min-width: 140px"
+              @click="funFiltering()"
+            >
+              <span>Применить</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper table-auto-height">
+      <table
+        class="table custom-table"
+        data-plugin="selectable"
+        data-row-selectable="false"
+      >
+        <thead>
+          <tr>
+            <th class="w-50">
+              <label class="checkbox">
+                <input
+                  class="selectable-all"
+                  type="checkbox"
+                  v-model="selectedAll"
+                  @change="funSelectedAll()"
+                />
+                <span class="box"></span>
+              </label>
+            </th>
+            <!-- шапка в цикле -->
+            <th
+              v-for="(item, index) in contentTh"
+              class="no-wrap text-center"
+              :key="index"
+              :style="'width:' + item.width + 'px;'"
+            >
+              <span
+                v-if="item.sortFieldName != null"
+                @click="funSorting(item.sortFieldName)"
+                style="text-decoration: underline"
+              >
+                {{ item.name }}
+              </span>
+              <span v-else>
+                {{ item.name }}
+              </span>
+              <span
+                v-if="
+                  sorting.col === item.sortFieldName && sorting.direct === 'asc'
+                "
+                class="wb-triangle-up"
+              ></span>
+              <span
+                v-if="
+                  sorting.col === item.sortFieldName &&
+                  sorting.direct === 'desc'
+                "
+                class="wb-triangle-down"
+              ></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- содержимое в цикле -->
+          <tr v-for="item in modelData.data" :key="item.id">
+            <td>
+              <label class="checkbox">
+                <input
+                  class="selectable-item"
+                  type="checkbox"
+                  :id="'check_' + item.id"
+                  :value="item.id"
+                  v-model="selectedRows"
+                />
+                <span class="box"></span>
+              </label>
+            </td>
+            <td class="text-center">
+              <a @click="saveQuery" :href="`disconnector_info/edit/${item.id}`">
+                {{ item.id }}
+              </a>
+            </td>
+            <td>
+              <a @click="saveQuery" :href="`disconnector_info/edit/${item.id}`">
+                {{ item.AssetInfo.CatalogAssetType.IdentifiedObject.name }}
+              </a>
+            </td>
+            <td>
+              <a @click="saveQuery" :href="`disconnector_info/edit/${item.id}`">
+                {{
+                  item.ratedVoltage.value !== null
+                    ? `${item.ratedVoltage.value} kB`
+                    : ""
+                }}
+              </a>
+            </td>
+            <td>
+              <a @click="saveQuery" :href="`disconnector_info/edit/${item.id}`">
+                {{
+                  item.ratedCurrent.value !== null
+                    ? `${item.ratedCurrent.value} A`
+                    : ""
+                }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-bottom-bar">
+      <!-- действия -->
+      <div class="left">
+        <a class="link-icon" @click="funLoadContent()">Обновить</a>
+        <a
+          v-if="
+            Object.keys(selectedRows).length > 0 &&
+            (getUserRole === 'vendor' ||
+              getUserRole === 'admin' ||
+              getUserRole === 'manager' ||
+              getUserRole === 'operator')
+          "
+          class="link-icon"
+          @click="funSelectedRows('delete')"
+          >Удалить выбранные</a
+        >
+        <a
+          v-if="
+            getUserRole === 'vendor' ||
+            getUserRole === 'admin' ||
+            getUserRole === 'manager' ||
+            getUserRole === 'operator'
+          "
+          @click="copyRow($event)"
+          class="link-icon copy_link"
+          href=""
+          >Скопировать</a
+        >
+      </div>
+      <!-- пагинация -->
+      <div class="right" v-if="Object.keys(modelData).length > 0">
+        <small class="mt-5 mr-15"
+          >Строк: {{ modelData.meta.pagination.total }}</small
+        >
+        <pagination
+          :limit="5"
+          :data="modelData.meta.pagination"
+          @pagination-change-page="funLoadContent"
+        ></pagination>
+      </div>
+    </div>
+  </section>
+</template>
+<script>
+import spisokLiveSearch from "../../mixins/spisokLiveSearch";
+
+export default {
+  name: "spisok_disconnector_info",
+  props: {
+    getUserRole: {
+      required: true,
+      type: String,
+    },
+    getModelName: {
+      required: true,
+      type: String,
+    },
+  },
+  mixins: [spisokLiveSearch],
+  data() {
+    return {
+      loading: false,
+      errored: false,
+      filterIsset: false,
+      resetMaterial: false,
+      modelData: {},
+      contentTh: {
+        0: {
+          name: "ID",
+          sortFieldName: "id",
+          width: 50,
+        },
+        2: {
+          name: "Наименование марки оборудования",
+          sortFieldName: "name",
+          width: "auto",
+        },
+        3: {
+          name: "Номинальное напряжение",
+          sortFieldName: "ratedVoltage",
+          width: "auto",
+        },
+        4: {
+          name: "Номинальный ток разъединителя",
+          sortFieldName: "ratedCurrent",
+          width: "auto",
+        },
+      },
+      selectedAll: false,
+      selectedRows: [],
+      filterName: "",
+      sorting: {
+        col: "",
+        direct: "",
+      },
+      filter: {
+        ratedVoltage: {
+          min: null,
+          max: null,
+        },
+        ratedCurrent: {
+          min: null,
+          max: null,
+        },
+      },
+    };
+  },
+  mounted() {
+    this.funLoadAll();
+  },
+  methods: {
+    clearFiltering() {
+      this.filterIsset = false;
+      this.resetMaterial = true;
+      this.filter = {
+        ratedVoltage: {
+          min: null,
+          max: null,
+        },
+        ratedCurrent: {
+          min: null,
+          max: null,
+        },
+      };
+    },
+    funFiltering() {
+      console.log("strart filtering");
+      this.funLoadContent();
+      if (
+        this.filter.ratedVoltage.min !== null ||
+        this.filter.ratedVoltage.max !== null ||
+        this.filter.ratedCurrent.min !== null ||
+        this.filter.ratedCurrent.max !== null
+      ) {
+        this.filterIsset = true;
+      }
+    },
+    loadStatus(val) {
+      this.loading = val;
+    },
+    funLoadAll() {
+      if (localStorage.getItem("table_search")) {
+        if (localStorage.getItem("spisok_model") === this.getModelName) {
+          this.filterName = localStorage.getItem("table_search");
+        } else {
+          // загрузка содержимого таблицы
+          this.funLoadContent();
+        }
+        localStorage.removeItem("table_search");
+      } else {
+        // загрузка содержимого таблицы
+        this.funLoadContent();
+        console.log(111);
+      }
+    },
+    async funLoadContent(page = 1) {
+      this.loading = true;
+      this.errored = false;
+
+      let currentPage = page;
+      if (localStorage.getItem("spisok_model")) {
+        if (localStorage.getItem("table_pagination")) {
+          if (localStorage.getItem("spisok_model") === this.getModelName) {
+            currentPage = localStorage.getItem("table_pagination");
+          }
+          localStorage.removeItem("table_pagination");
+        }
+        localStorage.removeItem("spisok_model");
+      }
+
+      let url = `/api/modelName/${this.getModelName}/switchInfo?page=${currentPage}`;
+      if (this.filterName.length > 0) {
+        url += `&search=${this.filterName}`;
+      }
+      if (this.sorting.col !== "") {
+        url += "&sortCol=" + this.sorting.col;
+        if (this.sorting.direct !== "") {
+          url += "&sortDirect=" + this.sorting.direct;
+        }
+      }
+
+      if (this.filter.ratedVoltage.min) {
+        url += "&ratedVoltageMin=" + this.filter.ratedVoltage.min;
+      }
+      if (this.filter.ratedVoltage.max) {
+        url += "&ratedVoltageMax=" + this.filter.ratedVoltage.max;
+      }
+      if (this.filter.ratedCurrent.min) {
+        url += "&ratedCurrentMin=" + this.filter.ratedCurrent.min;
+      }
+      if (this.filter.ratedCurrent.max) {
+        url += "&ratedCurrentMax=" + this.filter.ratedCurrent.max;
+      }
+
+      await axios
+        .get(url)
+        .then((response) => {
+          this.modelData = response.data;
+        })
+        .catch((error) => {
+          this.errored = true;
+          toastr.error("Ошибка при загрузке данных...");
+        })
+        .finally(() => {
+          this.loading = false;
+
+          this.selectedAll = false;
+          this.selectedRows = [];
+        });
+    },
+
+    funSearchClear() {
+      this.filterName = "";
+      this.filterBaseVoltage = 0;
+      this.filterAclineStatus = 0;
+
+      this.funLoadContent();
+    },
+    funSelectedAll() {
+      this.selectedRows = [];
+      if (this.modelData.data.length > 0 && this.selectedAll === true) {
+        let mySpisok = [];
+        this.modelData.data.forEach(function (item) {
+          mySpisok.push(item.id);
+        });
+        this.selectedRows = mySpisok;
+      }
+    },
+    async funSelectedRows() {
+      if (!confirm("Вы уверены, что хотите удалить выделенные записи?")) return;
+
+      this.loading = true;
+      this.errored = false;
+
+      if (Object.keys(this.selectedRows).length === 1) {
+        await axios
+          .delete(
+            `/api/modelName/${this.getModelName}/switchInfo/${this.selectedRows[0]}`
+          )
+          .then((response) => {
+            toastr.info("Удаление выполнено успешно");
+            this.funLoadContent();
+          })
+          .catch((error) => {
+            this.errored = true;
+            toastr.error("Ошибка при обработке данных...");
+            console.log(error);
+          });
+      } else if (Object.keys(this.selectedRows).length > 1) {
+        toastr.error("Массовое удаление пока не поддерживается!");
+        this.loading = false;
+      } else {
+        toastr.error("Выберите хотябы одну запись для удаления!");
+        this.loading = false;
+      }
+    },
+    funSorting(getCol) {
+      if (this.sorting.col !== getCol) {
+        this.sorting.direct = "asc";
+      } else {
+        this.sorting.direct = this.sorting.direct === "asc" ? "desc" : "asc";
+      }
+
+      this.sorting.col = getCol;
+
+      this.funLoadContent();
+    },
+    copyRow(e) {
+      e.preventDefault();
+      if (this.selectedRows.length === 1) {
+        window.location.href += `/edit?fromId=${this.selectedRows[0]}`;
+      } else {
+        toastr.error("Выберите одну запись");
+      }
+    },
+    saveQuery() {
+      if (this.modelData.meta?.pagination) {
+        localStorage.setItem(
+          "table_pagination",
+          this.modelData.meta?.pagination.current_page
+        );
+      }
+      if (this.filterName !== "") {
+        localStorage.setItem("table_search", this.filterName);
+      }
+      localStorage.setItem("spisok_model", this.getModelName);
+    },
+  },
+};
+</script>

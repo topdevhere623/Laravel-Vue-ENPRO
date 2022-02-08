@@ -1,0 +1,43 @@
+body {
+    padding-top: $header-height;
+    overflow-x: hidden;
+}
+
+.page {
+    background-color: $color-blue-2;
+    color: white;
+}
+
+.map-auto-height {
+    margin-bottom: 0;
+}
+
+.page-content:last-child {
+    padding-bottom: 0;
+}
+
+.custom-page {
+    display: flex;
+
+    .main-content {
+        flex: 1;
+    }
+}
+
+.main-content {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.map-auto-height {
+    min-height: 50vh;
+}
+
+.dRB {
+    background-color: $color-blue-3 !important;
+    padding: 0 !important;
+}
+
+.dRBImport {
+    padding: 0 !important;
+}

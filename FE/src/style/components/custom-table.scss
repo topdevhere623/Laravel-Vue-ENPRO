@@ -1,0 +1,131 @@
+.custom-table {
+    margin-bottom: 0;
+    color: white;
+
+    .btn-default {
+        background-color: $color-blue-3;
+        color: white;
+        border: 0;
+
+        &:hover {
+            background-color: $color-blue-3;
+            color: white;
+            border: 0;
+            opacity: .8;
+        }
+    }
+
+    select.form-control {
+        background-color: $color-blue-3;
+        color: white;
+        border: 0;
+        border-radius: 5px;
+    }
+
+    th, td {
+        &:first-child {
+            .checkbox {
+                padding-left: 20px;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .nameTd {
+        width: 40%;
+    }
+
+    thead {
+        th {
+            background-color: $color-blue-1;
+            border-left: 1px solid #18191D;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 16px;
+            padding: 20px 20px;
+            color: white;
+            box-sizing: border-box;
+            border-bottom: 0;
+            vertical-align: middle;
+            word-break: break-word;
+
+            &:first-child {
+                border-left: 0;
+            }
+        }
+
+        .form-control {
+            display: inline-block;
+            width: auto;
+        }
+
+        .no-wrap .form-control {
+            margin-left: 10px;
+        }
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .color-link {
+        text-decoration: underline;
+        color: $color-main;
+        white-space: nowrap;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    tbody {
+        td {
+            background-color: $color-blue-1;
+            border-left: 1px solid #292B2F;
+            border-top: 1px solid #292B2F;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 16px;
+            padding: 20px 20px;
+            color: #FFF;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+    }
+}
+
+.table-wrapper {
+    overflow: auto;
+    position: relative;
+
+    &::-webkit-scrollbar {
+        width: 13px;
+        height: 13px;
+        background-color: #2F3136;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #202225;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iNzY3IiB2aWV3Qm94PSIwIDAgMTQgNzY3IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KICAgIDxsaW5lIHgxPSIyLjg2NDI2IiB5MT0iMC41IiB4Mj0iMTAuMTM3IiB5Mj0iMC41IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4NCiAgICA8bGluZSB4MT0iMi44NjQyNiIgeTE9IjUuNSIgeDI9IjEwLjEzNyIgeTI9IjUuNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQogICAgPGxpbmUgeDE9IjE0IiB5MT0iNzY2LjUiIHkyPSI3NjYuNSIgc3Ryb2tlPSIjMTYxNzE5Ii8+DQo8L3N2Zz4NCg==");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 10px 10px;
+
+        &:hover {
+            background-color: #222427;
+        }
+    }
+}
+
+.table-bottom-bar {
+    padding: 15px 20px;
+    background: $color-blue-3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left,
+    .right {
+        display: flex;
+    }
+}

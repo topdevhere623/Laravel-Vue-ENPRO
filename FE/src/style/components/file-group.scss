@@ -1,0 +1,29 @@
+.file-group {
+    color: #CDCDCD;
+    font-size: 14px;
+    line-height: 18px;
+    position: relative;
+
+    .row {
+        align-items: center;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    label {
+        display: block;
+        margin: 0;
+    }
+
+    input {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+    }
+}

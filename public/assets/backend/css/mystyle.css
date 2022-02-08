@@ -1,0 +1,89 @@
+/* мои стили */
+
+/* изображения в списках */
+.img-index {
+    height: 30px;
+    max-width: 100px;
+}
+
+/* изображения в списках для выбора*/
+.img-vibor {
+    height: 75px;
+    max-width: 120px;
+}
+
+/* изображения адаптивные (как в инструкции по API) */
+.adaptiv_content img {
+    height: auto;
+    width: 100%;
+    /* еще больше контроля с max-width */
+    max-width: 720px;
+}
+
+/* красный шрифт */
+.red {
+    color: red !important;
+}
+
+/* жирный шрифт */
+.bold {
+    font-weight: bold;
+}
+
+/* div с прокруткой для шикоких таблиц */
+.scrollable-horizontal {
+    overflow: auto;
+}
+
+.btn {
+    margin: 5px;
+}
+
+.btn-blue {
+    background-color: #465FB9;
+    color: #fff;
+}
+
+#messageBox {
+    white-space: pre-wrap; /* принудительный перенос слов */
+    word-break: break-all;
+}
+
+.otladka_zaprosov {
+    width: 100%;
+}
+
+.otladka_zaprosov img {
+    width: 100%;
+    height: auto;
+    max-width: 450px;
+    margin: 10px;
+    float: left;
+}
+
+/* ------------------------------------------------------------------------------------------ */
+/* карта яндекса */
+/* по-умолчнию, на страницах свое может задаваться */
+.map {
+    /* width: 600px; 98%;  нужно указывать только в px. Если размер не задан, то сама расстяшивается на 100%*/
+    height: 600px;
+    margin: 10px auto;
+
+}
+
+/* внутри балуна div*/
+.ya_map {
+    font-family: arial;
+    font-size: 12px;
+    color: #454545;
+}
+
+/* ------------------------------------------------------------------------------------------ */
+
+/* текст, но по стилю, как ссылка a href */
+.span_as_ahref {
+    text-decoration: underline;
+    color: #3949ab;
+    cursor: pointer;
+}
+

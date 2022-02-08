@@ -1,0 +1,93 @@
+.selectric-wrapper {
+    .selectric {
+        background: $color-blue-1;
+        border-radius: 6px;
+        border: 0;
+    }
+
+    .selectric-items {
+        background: $color-blue-1;
+        box-shadow: 0 0 0;
+        border-radius: 0 0 6px 6px;
+        border-top: none;
+        border: 0;
+
+        li {
+            color: #F1F1F1;
+            padding: 11px 20px;
+            font-size: 14px;
+            line-height: 18px;
+            transition: color .3s;
+            border-top: 1px solid #2F3136;
+
+            &.selected,
+            &.highlighted {
+                background-color: transparent;
+            }
+
+            &:hover {
+               color: white;
+                background: none;
+            }
+        }
+    }
+
+    .label {
+        color: white;
+        margin-left: 20px;
+        font-size: 16px;
+        line-height: 21px;
+        height: 63px;
+        padding-top: 28px;
+        transition: all .3s;
+    }
+
+    .arrow {
+        position: absolute;
+        right: 20px;
+        top: 23px;
+        opacity: 0.5;
+        transition: transform .3s;
+    }
+
+    .open & {
+        .arrow {
+            transform: rotate(180deg);
+        }
+    }
+
+    &.selectric-open {
+        .selectric {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .arrow {
+            transform: rotate(180deg);
+        }
+
+        .label {
+            opacity: 0;
+        }
+
+        & + .form-input-label {
+            font-size: 16px;
+            line-height: 21px;
+            color: #F1F1F1;
+            top: 22px;
+            z-index: 10000;
+        }
+    }
+
+    &.selectric-above {
+        &.selectric-open {
+            .selectric {
+                border-radius: 0 0 6px 6px;
+            }
+
+            .selectric-items {
+                border-radius: 6px 6px 0 0;
+                border-bottom: 0;
+            }
+        }
+    }
+}

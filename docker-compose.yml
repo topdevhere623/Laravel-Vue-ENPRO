@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: 'cim'
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html
+    environment:
+      XDEBUG_CONFIG: "remote_host=host.docker.internal upload_max_filesize=2048M remote_enable=1 max_input_vars=10000 memory_limit=512M max_nesting_level=512 remote_autostart=0 profiler_enable_trigger=off  remote_port=9021"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - default
+  db:
+    image: mysql:5.7
+    container_name: dbcim
+    #restart: always
+    ports:
+      - "3306:${DB_PORT}"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - persistent:/var/lib/mysql
+      - ./docker/dump:/docker-entrypoint-initdb.d
+    networks:
+      - default
+
+#Volumes
+volumes:
+    persistent:

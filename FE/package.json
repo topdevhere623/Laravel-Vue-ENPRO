@@ -1,0 +1,22 @@
+{
+  "name": "CIM",
+  "version": "1.0.0",
+  "author": "Kunof",
+  "description": "frontendTemplate",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rigger": "^0.5.8",
+    "gulp-watch": "^5.0.1",
+    "rimraf": "^2.6.3"
+  },
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-sass": "^4.0.2",
+    "gulp-svg-sprite": "^1.5.0"
+  }
+}

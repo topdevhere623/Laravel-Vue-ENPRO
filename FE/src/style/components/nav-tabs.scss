@@ -1,0 +1,22 @@
+.nav-tabs {
+    border-bottom-color: $color-blue-1;
+
+    .nav-link {
+        color: white;
+
+        &:hover {
+            background-color: rgba($color-blue-1, .6);
+            border-bottom-color: $color-blue-1;
+        }
+
+        &.active {
+            background-color: $color-blue-1;
+            border-bottom-color: $color-blue-1;
+
+            &:hover, &:focus {
+                background-color: $color-blue-1;
+                border-bottom-color: $color-blue-1;
+            }
+        }
+    }
+}
